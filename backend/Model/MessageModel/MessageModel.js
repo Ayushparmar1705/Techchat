@@ -6,4 +6,10 @@ const sendMessage = (messageData, callback) => {
 }
 
 
-module.exports = sendMessage;
+const getMessage = (data , callback)=>{
+    const sql = "SELECT * FROM messages WHERE (created_by = ? AND reciver_by = ?) OR (reciver_by = ? AND created_by = ?)"
+    db.query(sql , [data.created_by , data.reciver_by , data.reciver_by , data.created_by],callback);
+}
+
+
+module.exports = {sendMessage , getMessage};
