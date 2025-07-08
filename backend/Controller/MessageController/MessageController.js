@@ -11,8 +11,6 @@ const sendmessage = (req, res) => {
     });
 }
 
-
-
 const getMsg = (req, res) => {
     const data = req.params;
     messages.getMessage(data, (err, result) => {

@@ -15,37 +15,49 @@ export default function MessagesViewModel() {
   const [getMessage, setGetMessage] = useState([]);
   const [dbmessages, setDbMessages] = useState([]);
   const [reciverId, setReciverId] = useState('');
+
   useEffect(() => {
+    // if socket io don't connected connect it
     if (!socket.connected) {
       socket.connect();
     }
+
+    //recive message from the server and set to state
     socket.on("recivemessage", (data) => {
 
       setGetMessage((prev) => [...prev, data])
     })
-
+    //get the token from the localstorage
     const token = localStorage.getItem("token");
+    // check the token is exists or not
     if (token) {
       const decoded = jwtDecode(token);
-      console.log(decoded);
+      // console.log(decoded);
       setdecodedToken(decoded.id);
 
     }
     else {
       navigate("/auth/login")
     }
+    //off the recive message and send message
     return () => {
-      socket.disconnect()
+
       socket.off("recivemessage");
       socket.off("sendmessage")
     };
 
   }, [navigate])
+
+
+
   useEffect(() => {
+    //get user from the database
     const getUser = async () => {
 
       try {
+        //check token is exists or not if not exists return
         if (!decodedToken) { return }
+        //get message
         const result = await messages.getUsers(decodedToken);
 
         setUsers(result);
@@ -61,7 +73,17 @@ export default function MessagesViewModel() {
 
     }
     getUser();
-  }, [decodedToken])
+
+    const fetchMessage = async () => {
+      if (reciverId) {
+        const result = await messages.getMessage(decodedToken, reciverId);
+        setDbMessages(result.message);
+      }
+
+    }
+    fetchMessage();
+  }, [decodedToken, reciverId])
+  //write logic for open board
   const openboard = async (fullname, id) => {
     setSelectedUserName(fullname);
     setReciverId(id);
@@ -70,19 +92,9 @@ export default function MessagesViewModel() {
 
 
   }
-  useEffect(() => {
-    const fetchMessage = async () => {
-      const result = await messages.getMessage(decodedToken, reciverId);
-      setDbMessages(result.message);
-
-    }
-    fetchMessage();
-  }, [decodedToken, reciverId]);
-  useEffect(() => {
-    console.log('fetched from database messages = ', dbmessages);
-  }, [decodedToken, reciverId, dbmessages])
 
   const handleSendMessage = async (e, reciver_id, messageText) => {
+    // write logic when i send the message on enter event
     if (e.key === "Enter" && messageText.trim() !== "") {
       await messages.sendMessage(decodedToken, reciver_id, messageText);
 
@@ -90,9 +102,7 @@ export default function MessagesViewModel() {
       socket.emit("sendmessage", { sender_id: decodedToken, reciverId: reciver_id, message: messageText });
 
 
-      socket.on("recivemessage", (data) => {
-        console.log("recive from server = ", data);
-      })
+
       return () => { socket.disconnect() };
     }
 

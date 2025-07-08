@@ -27,8 +27,8 @@ export default function MessagesView({ myuser, loading, token, onclick, selected
                             </div>
                         ) : (
                             <div className='p-[10px]'>
-                                {myuser.map((data) => (
-                                    <div onClick={() => {
+                                {myuser.map((data, index) => (
+                                    <div key={index} onClick={() => {
                                         onclick(data.fullname, data.id);
                                         setReciverId(data.id);
                                     }} className='p-[10px] hover:bg-white transition-all duration-300 ease-in-out rounded-[10px] flex items-center cursor-pointer'>
@@ -84,17 +84,17 @@ export default function MessagesView({ myuser, loading, token, onclick, selected
                         </div>
                         <div className='h-[70%] overflow-y-scroll'>
                             {dbmessages.map((data, index) => (
-                                    <div className='w-[100%] flex flex-col items-end'>
-                                        <div
-                                            
-                                            className='rounded  bg-gray-100 w-fit mt-[5px]'>
-                                            <p
+                                <div key={index} className='w-[100%] flex flex-col items-end'>
+                                    <div
 
-                                                className='text-right p-[10px] mt-[10px]' key={index}>{data.message}</p>
+                                        className='rounded  bg-gray-100 w-fit mt-[5px]'>
+                                        <p
 
-                                        </div>
+                                            className='text-right p-[10px] mt-[10px]' key={index}>{data.message}</p>
+
                                     </div>
-                              
+                                </div>
+
                             ))}
                         </div>
                     </div>

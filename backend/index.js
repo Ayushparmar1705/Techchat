@@ -3,6 +3,7 @@ const cors = require("cors");
 const Authroutes = require("./Routes/Authroutes/Authroutes");
 const Getuserroutes = require("./Routes/GetuserRoutes/GetuserRoutes");
 const Messageroutes = require("./Routes/MessageRoutes/Messageroutes");
+const Profileroutes = require("./Routes/ProfileRoutes/ProfileRoutes");
 const socketio = require("socket.io");
 const http = require("http");
 const app = express();
@@ -46,4 +47,5 @@ io.on("connection", (socket) => {
 app.use("/auth", Authroutes);
 app.use("/get/", Getuserroutes);
 app.use("/messages/", Messageroutes);
+app.use("/user-profile",Profileroutes);
 server.listen(8080);

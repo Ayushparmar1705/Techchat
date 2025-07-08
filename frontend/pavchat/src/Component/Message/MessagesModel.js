@@ -23,7 +23,6 @@ export const messages = {
     },
 
     getMessage: async (created_by, reciver_by) => {
-        console.log("output = ",created_by , reciver_by);
         const URL = `http://localhost:8080/messages/getmessage/${created_by}/${reciver_by}`;
         const data = await fetch(URL);
         const result = await data.json();
