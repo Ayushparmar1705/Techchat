@@ -27,5 +27,13 @@ export const messages = {
         const data = await fetch(URL);
         const result = await data.json();
         return result;
+    },
+
+    Userprofile: async (token) => {
+        const URL = `http://localhost:8080/user-profile/${token}`;
+        const data = await fetch(URL);
+        const result = await data.json();
+        return result;
     }
+
 }

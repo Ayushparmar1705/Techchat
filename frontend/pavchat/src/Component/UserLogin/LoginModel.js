@@ -11,5 +11,6 @@ export const login = {
         });
         const result = await data.json();
         return result;
+        
     }
 }

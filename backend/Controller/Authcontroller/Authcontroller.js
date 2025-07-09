@@ -26,13 +26,19 @@ const login = async (req, res) => {
         if (err) {
             return res.status(500).send({ message: err });
         } else {
-            const password = result[0]["password"];
+            console.log(result);
+            if(result.length>0){
+                const password = result[0]["password"];
             const decryptedPassword = bcrypt.compareSync(userData.password, password);
             if (!decryptedPassword) {
                 return res.status(401).send({ message: "Invalid password" });
             }
             const token = jwt.sign({ id: result[0].id }, process.env.JWT_SECRET, { expiresIn: "1h" });
             return res.status(200).send({message : "Login succesfully", token});
+            }
+            else{
+                return res.status(200).send({message : "user not found"});
+            }
         }
     })
 }

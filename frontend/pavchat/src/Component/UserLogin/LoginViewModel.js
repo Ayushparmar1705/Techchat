@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { login } from './LoginModel';
 import LoginView from './LoginView';
 import { useNavigate } from 'react-router-dom';
-
+import {toast} from "react-toastify"
 export default function LoginViewModel() {
     const navigate = useNavigate();
     const [form, setForm] = useState({ email: "", password: "" });
@@ -12,14 +12,19 @@ export default function LoginViewModel() {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
     const handleLogin = async () => {
-        console.log("Handle Login function called...")
+        
         setLoading(true);
         try {
             const result = await login.Loginuser(form);
+            console.log(result);
+            if(result.length>0){
+                localStorage.setItem("token", result["token"])
+                navigate("/dashboard");
+                
+            }else{
+                toast(result.message);
+            }
 
-            localStorage.setItem("token", result["token"])
-
-            navigate("/dashboard");
         }
         catch (err) {
             console.log("error = ", err);

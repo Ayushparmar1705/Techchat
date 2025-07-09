@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-export default function MessagesView({ myuser, loading, token, onclick, selectedUserName, handleSendMessage, getMesage, dbmessages }) {
+import PropTypes from "prop-types";
+export default function MessagesView({ myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, dbmessages, handlesetName, profiledata }) {
     const [message, setMessage] = useState("");
     const [reciverId, setReciverId] = useState(null);
     const [openProfile, setOpenProfile] = useState(true);
@@ -11,15 +12,18 @@ export default function MessagesView({ myuser, loading, token, onclick, selected
 
         <div className='grid grid-cols-12 '>
 
-            <div className='col-span-3  h-[100vh] bg-gray-50 bg-cover'>
+            <div className='col-span-3  h-screen bg-gray-50 overflow-y-scroll'>
                 <div className='flex justify-center'>
                     <img src='https://cdn-icons-png.flaticon.com/512/4712/4712027.png' alt='Nofound' className='h-[20px] w-[20px] '></img>
                     <p className='text-black ml-2' >Techchat</p>
+
                 </div>
+
                 {openProfile ? (
-                    <div>
+                    <div className='h-screen '>
                         {loading ? (
-                            <div className='w-[full] '>
+
+                            <div className='w-[full]'>
                                 <div className='w-[200px] m-[auto] rounded-[10px] mt-[10px] h-[50px] bg-gray-100 animate-pulse'></div>
                                 <div className='w-[200px] m-[auto] rounded-[10px] mt-[10px] h-[50px] bg-gray-100 animate-pulse'></div>
                                 <div className='w-[200px] m-[auto] rounded-[10px] mt-[10px] h-[50px] bg-gray-100 animate-pulse'></div>
@@ -27,35 +31,51 @@ export default function MessagesView({ myuser, loading, token, onclick, selected
                             </div>
                         ) : (
                             <div className='p-[10px]'>
+                                <div>
+                                    <input type='search' placeholder='Enter the user name to search' name='name' className='rounded-[10px] border-[2px] border-gray-100 block p-[5px] w-[300px] m-[auto] focus:scale-[1.03] focus:outline-none' onChange={(e) => { handlesetName(e) }}></input>
+                                </div>
+
                                 {myuser.map((data, index) => (
                                     <div key={index} onClick={() => {
                                         onclick(data.fullname, data.id);
                                         setReciverId(data.id);
-                                    }} className='p-[10px] hover:bg-white transition-all duration-300 ease-in-out rounded-[10px] flex items-center cursor-pointer'>
+                                    }} className=' p-[10px] hover:bg-white transition-all duration-300 ease-in-out rounded-[10px] flex items-center cursor-pointer'>
                                         <img className='h-[30px] w-[30px]' src='../images/user.png' alt='Nofound'></img>
                                         <p className='p-[10px]'>{data.fullname}</p>
                                     </div>
                                 ))}
+
                             </div>
                         )}
-                        <div className='fixed bottom-4'>
+                        <div className='sticky bottom-0 bg-gray-200'>
 
 
-                            <div className='group rounded-full h-[60px] w-[60px] flex justify-center items-center' onClick={dropdown}>
+                            <div className=' group rounded-full h-[60px] w-[60px] flex justify-center items-center' onClick={dropdown}>
                                 <img className='rounded-full h-[40px] w-[45px]' src='../images/profile.jpg' alt='Nofound' ></img>
-                                <p className='hidden fixed left-[50px] group-hover:block'>Profile</p>
+                                <p className='hidden absolute left-[70px] bg-gray-100 shadow  rounded p-[2px] group-hover:block'>Profile</p>
 
                             </div>
+
                         </div>
+
                     </div>
                 ) : (
+                    <div>
+                        <div className='text-center h-screen'>
+                            <p className='font-bold mt-[10px]'>Profile</p>
+                            <img className="block m-[auto] h-[60px] w-[60px] rounded-[100px]" src='../images/profile.jpg' alt='Nofound'></img>
+                            <input type='text' className='mt-[10px] block m-[auto] border-[2px] border-gray-100 p-[10px] focus:outline-none transition-all duration-300 ease-in-out focus:scale-[1.05]' value={profiledata.message[0]["fullname"]}></input>
+                            <input type='email' className='mt-[10px] block m-[auto] border-[2px] border-gray-100 p-[10px] focus:outline-none transition-all duration-300 ease-in-out focus:scale-[1.05]' value={profiledata.message[0]["email"]}></input>
+                        </div>
 
-                    <div className='fixed bottom-4'>
+                        <div className='sticky bottom-0 bg-gray-200 '>
 
 
-                        <div className='group rounded-full h-[60px] w-[60px] flex justify-center items-center' onClick={dropdown}>
-                            <img className='h-[40px] w-[40px]' src='../images/chat.png' alt='Nofound'></img>
-                            <p className='hidden fixed left-[50px] group-hover:block'>Chat</p>
+                            <div className='group relative rounded-full  h-[60px] w-[60px] flex justify-center items-center' onClick={dropdown}>
+                                <img className='h-[40px] w-[40px]' src='../images/chat.png' alt='Nofound'></img>
+                                <p className='hidden absolute left-[70px] bg-gray-100 shadow  rounded p-[2px] group-hover:block'>Chat</p>
+
+                            </div>
 
                         </div>
                     </div>
@@ -83,19 +103,19 @@ export default function MessagesView({ myuser, loading, token, onclick, selected
 
                         </div>
                         <div className='h-[70%] overflow-y-scroll'>
-                            {dbmessages.map((data, index) => (
-                                <div key={index} className='w-[100%] flex flex-col items-end'>
-                                    <div
+                            {dbmessages.length > 0 && (
+                                dbmessages.map((data, index) => (
+                                    <div key={index} className='w-[100%] flex flex-col items-end'>
+                                        <div
 
-                                        className='rounded  bg-gray-100 w-fit mt-[5px]'>
-                                        <p
+                                            className='rounded  bg-gray-100 w-fit mt-[5px]'>
+                                            <p className='text-right p-[10px] mt-[10px]' key={index}>{data.message}</p>
 
-                                            className='text-right p-[10px] mt-[10px]' key={index}>{data.message}</p>
-
+                                        </div>
                                     </div>
-                                </div>
 
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -108,4 +128,12 @@ export default function MessagesView({ myuser, loading, token, onclick, selected
             </div>
         </div>
     )
+}
+MessagesView.propTypes = {
+    myuser: PropTypes.array.isRequired,
+    loading: PropTypes.bool.isRequired,
+}
+
+MessagesView.defaultProps = {
+    loading: true,
 }

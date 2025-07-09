@@ -48,4 +48,6 @@ app.use("/auth", Authroutes);
 app.use("/get/", Getuserroutes);
 app.use("/messages/", Messageroutes);
 app.use("/user-profile",Profileroutes);
-server.listen(8080);
+server.listen(8080,'0.0.0.0',()=>{
+    console.log("server is running")
+});
