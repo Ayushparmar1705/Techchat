@@ -2,16 +2,20 @@ import React, { useState } from 'react'
 import { Signupmodel } from './SignupModel';
 import { toast } from "react-toastify"
 import SignupView from './SignupView';
+
 export default function SignupViewModel() {
-    const [formdata, setFormdata] = useState({ username: "", email: "", password: "" });
+    const [formdata, setFormdata] = useState({ fullname: "", email: "", password: "" });
     const [loading, setLoading] = useState(true);
     const handleOnchange = (e) => {
         setFormdata({ ...formdata, [e.target.name]: e.target.value });
+        console.log(e.target.name);
+
+
 
     }
     const signupUser = async () => {
-        console.log("function is called...")
         const toastId = toast.loading("Creating account...");
+        setLoading(true);
         try {
             const result = await Signupmodel(formdata);
             console.log(result);
@@ -25,7 +29,7 @@ export default function SignupViewModel() {
             }
             else {
                 toast.update(toastId, {
-                    render: "🎉 Account created",
+                    render: result.message,
                     type: "success",
                     isLoading: false,
                     autoClose: 3000,

@@ -5,7 +5,7 @@ const getUser = (token, callback) => {
     }
     else{
         console.log(token);
-    const sql = "SELECT fullname , id , email , password FROM signup WHERE id != ?";
+    const sql = "SELECT fullname , id , email , password FROM user_details WHERE id != ?";
     db.query(sql, token, callback);
     }
 }

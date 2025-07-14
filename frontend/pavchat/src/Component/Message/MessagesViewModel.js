@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { messages } from './MessagesModel';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,10 @@ export default function MessagesViewModel() {
   const [getMessage, setGetMessage] = useState([]);
   const [dbmessages, setDbMessages] = useState([]);
   const [reciverId, setReciverId] = useState('');
+  const [allUsers, setAllusers] = useState([]);
+  const [profiledata, setProfiledata] = useState([]);
+  const [openBox, setOpenBox] = useState(true);
+
 
   useEffect(() => {
     // if socket io don't connected connect it
@@ -22,11 +26,13 @@ export default function MessagesViewModel() {
       socket.connect();
     }
 
+
+
+
     //recive message from the server and set to state
     socket.on("recivemessage", (data) => {
 
-      setGetMessage((prev) => [...prev, data])
-    })
+      setGetMessage((prev) => [...prev, data])    })
     //get the token from the localstorage
     const token = localStorage.getItem("token");
     // check the token is exists or not
@@ -35,25 +41,30 @@ export default function MessagesViewModel() {
       // console.log(decoded);
       setdecodedToken(decoded.id);
 
+
     }
+
+
     else {
       navigate("/auth/login")
     }
-    //off the recive message and send message
+
+    //off the recive message and send messag
+
+
     return () => {
 
       socket.off("recivemessage");
       socket.off("sendmessage")
+
     };
 
   }, [navigate])
 
 
-
-  useEffect(() => {
-    //get user from the database
+useEffect(()=>{
+     //get user from the database
     const getUser = async () => {
-
       try {
         //check token is exists or not if not exists return
         if (!decodedToken) { return }
@@ -61,28 +72,53 @@ export default function MessagesViewModel() {
         const result = await messages.getUsers(decodedToken);
 
         setUsers(result);
+        setAllusers(result);
 
       }
       catch (err) {
         console.log(err);
       } finally {
-        setInterval(() => {
-          setLoading(false);
-        }, 5000);
+
+  setLoading(false);
+      
+
+
       }
 
     }
     getUser();
 
-    const fetchMessage = async () => {
-      if (reciverId) {
-        const result = await messages.getMessage(decodedToken, reciverId);
-        setDbMessages(result.message);
-      }
+},[decodedToken])
 
+
+ 
+
+  
+
+
+
+      const fetchMessage = async () => {
+        if (reciverId) {
+          const result = await messages.getMessage(decodedToken, reciverId);
+
+          setDbMessages(result.message)
+        }
+
+      }
+ 
+      useEffect(()=>{
+        fetchMessage();
+      });
+  useEffect(() => {
+    async function getProfile() {
+      if (decodedToken) {
+        const result = await messages.Userprofile(decodedToken)
+        setProfiledata(result);
+      }
     }
-    fetchMessage();
-  }, [decodedToken, reciverId])
+    getProfile()
+    
+  }, [decodedToken]);
   //write logic for open board
   const openboard = async (fullname, id) => {
     setSelectedUserName(fullname);
@@ -93,21 +129,51 @@ export default function MessagesViewModel() {
 
   }
 
-  const handleSendMessage = async (e, reciver_id, messageText) => {
-    // write logic when i send the message on enter event
-    if (e.key === "Enter" && messageText.trim() !== "") {
-      await messages.sendMessage(decodedToken, reciver_id, messageText);
 
-      // send the message to the server
-      socket.emit("sendmessage", { sender_id: decodedToken, reciverId: reciver_id, message: messageText });
+  const handlesetName = (e) => {
+    const name = e.target.value;
+    // console.log(name.length);
+    if (name.length > 0) {
+      const myresult = users.filter((data) => {
+
+        if (data.fullname.includes(name)) {
+
+          if (typeof data === 'object') {
+            return Object.keys(data);
 
 
-
-      return () => { socket.disconnect() };
+          }
+        }
+        return 0;
+      })
+      setUsers(myresult);
+    } else {
+      setUsers(allUsers);
     }
 
+
+  }
+const handleSendMessage = async (e, reciver_id, messageText) => {
+  if (e.key === "Enter" && messageText.trim() !== "") {
+    // Save message to backend
+    const result = await messages.sendMessage(decodedToken, reciver_id, messageText);
+    console.log("updated = ",result);
+  
+      
+      // Emit to other clients
+      socket.emit("sendmessage", {
+        sender_id: decodedToken,
+        reciverId: reciver_id,
+        message: messageText,
+      });
+  }
+};
+
+
+  const openBoxforUser = () => {
+    setOpenBox(!openBox);
   }
 
 
-  return (<MessagesView myuser={users} loading={loading} onclick={openboard} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} getMesage={getMessage} dbmessages={dbmessages}></MessagesView>)
+  return (<MessagesView myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} getMesage={getMessage} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox}></MessagesView >)
 }

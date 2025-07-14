@@ -16,8 +16,8 @@ export default function LoginViewModel() {
         setLoading(true);
         try {
             const result = await login.Loginuser(form);
-            console.log(result);
-            if(result.length>0){
+            console.log("My result = ",result);
+            if(result.message === "Login succesfully"){
                 localStorage.setItem("token", result["token"])
                 navigate("/dashboard");
                 
