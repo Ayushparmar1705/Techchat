@@ -25,14 +25,7 @@ export default function Sidebaruser({ myuser, setUserHover, userHover, setRecive
                         myuser.length > 0 ? (
                             myuser.map((data, index) => (
 
-                                <motion.div 
-                                initial = {{x:-100 , opacity : 0}}
-                                    animate = {{x : 0 , opacity : 1}}
-                                    transition={{
-                                        type : "spring",
-                                        stiffness : 50,
-                                        damping : 50,
-                                    }}
+                                <div 
                                  key={index} onClick={() => {
                                     onclick(data.fullname, data.id);
                                     setReciverId(data.id);
@@ -52,7 +45,7 @@ export default function Sidebaruser({ myuser, setUserHover, userHover, setRecive
 
                                         }}></i>
                                     )}
-                                </motion.div>
+                                </div>
 
 
                             ))

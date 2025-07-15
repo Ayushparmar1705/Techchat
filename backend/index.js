@@ -19,8 +19,24 @@ const io = socketio(server, {
     },
     transports: ["websocket"],
 });
+const onlineUser = new Map();
 //create the connection for the client. when client is connected a socket object is created for the client and you can send and recive message
 io.on("connection", (socket) => {
+
+    // check the user is the online
+    socket.on("user_connected",(userId)=>{
+        onlineUser.set(userId , socket.id);
+        io.emit("user_update_status",Array.from(onlineUser.keys()));
+    })
+
+
+
+    // check the user is the offline
+    socket.on("user-offline",(userId)=>{
+        onlineUser.delete(userId);
+        io.emit("user_update_status",Array.from(onlineUser.keys()));
+    })
+
     // console.log("client connected",socket.id);
     // get the message for the client
     // When client send the message to the server below callback execute

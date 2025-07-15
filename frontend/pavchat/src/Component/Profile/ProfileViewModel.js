@@ -1,7 +1,7 @@
 import { Camera, User } from "lucide-react";
 import React, { useRef, useState } from "react";
 
-export default function ProfileViewModel({ profiledata }) {
+export default function ProfileViewModel({ profiledata , handleLogout }) {
     const fileInputRef = useRef(null);
     const [ProfileImage, setProfileImage] = useState(null);
 
@@ -95,6 +95,8 @@ export default function ProfileViewModel({ profiledata }) {
                         Save
                     </button>
                 </div>
+
+                <button onClick={handleLogout}>Logout</button>
             </div>
         </div>
     );

@@ -2,15 +2,21 @@
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState } from 'react'
 
-export default function Openchattingboard({ selectedUserName, setMessage, handleSendMessage, reciverId, message, getMesage , dbmessages }) {
+export default function Openchattingboard({ selectedUserName, setMessage, handleSendMessage, reciverId, message, getMesage , dbmessages , onlineUser}) {
     const [decodedToken , setdecodedToken] = useState("");
    useEffect(()=>{
      const token = localStorage.getItem("token");
 
     if(token){
-        setdecodedToken(token.id);
+        const decode = jwtDecode(token);
+        setdecodedToken(decode.id);
     }
    },[decodedToken]);
+   useEffect(()=>{
+    if(decodedToken){
+        console.log("decoded token = ",decodedToken);
+    }
+   },[decodedToken])
   
     return (
 
@@ -23,7 +29,12 @@ export default function Openchattingboard({ selectedUserName, setMessage, handle
 
                <div className='bg-gray-50 h-[60px]'>
                  <p className='p-[2px] text-[20px]' style={{ fontFamily: "Be Vietnam Pro" }}>{selectedUserName}</p>
-                 <p className='p-[2px] font-bold text-[10px]'>Online</p>
+                 <p className='p-[2px] font-bold text-[10px]'>
+                    {onlineUser.includes(reciverId)? (
+                        <p className='text-green-500'>🟢 Online</p>
+                    ):
+                    <p className='text-gray-500'>⚪️ Offline</p>}
+                 </p>
                </div>
                 <div className='relative top-[80%] w-[100%]'>
                     <input onChange={(e) => { setMessage(e.target.value) }} onKeyDown={(e) => {

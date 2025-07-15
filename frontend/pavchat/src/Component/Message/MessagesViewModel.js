@@ -5,7 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import MessagesView from "./MessagesView";
 import socket from "../../Socketconnection/SocketConnection";
-
+import { toast } from "react-toastify"
 export default function MessagesViewModel() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -18,6 +18,7 @@ export default function MessagesViewModel() {
   const [allUsers, setAllusers] = useState([]);
   const [profiledata, setProfiledata] = useState([]);
   const [openBox, setOpenBox] = useState(true);
+  const [onlineUser, setOnlineUser] = useState([]);
 
 
   useEffect(() => {
@@ -32,7 +33,8 @@ export default function MessagesViewModel() {
     //recive message from the server and set to state
     socket.on("recivemessage", (data) => {
 
-      setGetMessage((prev) => [...prev, data])    })
+      setGetMessage((prev) => [...prev, data])
+    })
     //get the token from the localstorage
     const token = localStorage.getItem("token");
     // check the token is exists or not
@@ -40,6 +42,18 @@ export default function MessagesViewModel() {
       const decoded = jwtDecode(token);
       // console.log(decoded);
       setdecodedToken(decoded.id);
+
+      socket.emit("user_connected", decoded.id);
+
+      socket.on("user_update_status", (data) => {
+        if (decoded) {
+          console.log("user data status = ", data);
+          setOnlineUser(data);
+        }
+
+      })
+
+
 
 
     }
@@ -62,8 +76,8 @@ export default function MessagesViewModel() {
   }, [navigate])
 
 
-useEffect(()=>{
-     //get user from the database
+  useEffect(() => {
+    //get user from the database
     const getUser = async () => {
       try {
         //check token is exists or not if not exists return
@@ -79,8 +93,8 @@ useEffect(()=>{
         console.log(err);
       } finally {
 
-  setLoading(false);
-      
+        setLoading(false);
+
 
 
       }
@@ -88,36 +102,45 @@ useEffect(()=>{
     }
     getUser();
 
-},[decodedToken])
-
-
- 
-
-  
+  }, [decodedToken])
 
 
 
-      const fetchMessage = async () => {
-        if (reciverId) {
-          const result = await messages.getMessage(decodedToken, reciverId);
 
-          setDbMessages(result.message)
-        }
 
-      }
- 
-      useEffect(()=>{
-        fetchMessage();
-      });
+
+
+
+  const fetchMessage = async () => {
+    if (reciverId) {
+      const result = await messages.getMessage(decodedToken, reciverId);
+
+      setDbMessages(result.message)
+    }
+
+  }
+
+  useEffect(() => {
+    fetchMessage();
+  });
   useEffect(() => {
     async function getProfile() {
+
+
+
+
       if (decodedToken) {
         const result = await messages.Userprofile(decodedToken)
         setProfiledata(result);
+
+
+
+
+
       }
     }
     getProfile()
-    
+
   }, [decodedToken]);
   //write logic for open board
   const openboard = async (fullname, id) => {
@@ -153,27 +176,32 @@ useEffect(()=>{
 
 
   }
-const handleSendMessage = async (e, reciver_id, messageText) => {
-  if (e.key === "Enter" && messageText.trim() !== "") {
-    // Save message to backend
-    const result = await messages.sendMessage(decodedToken, reciver_id, messageText);
-    console.log("updated = ",result);
-  
-      
+  const handleSendMessage = async (e, reciver_id, messageText) => {
+    if (e.key === "Enter" && messageText.trim() !== "") {
+      // Save message to backend
+      const result = await messages.sendMessage(decodedToken, reciver_id, messageText);
+      console.log("updated = ", result);
+
+
       // Emit to other clients
       socket.emit("sendmessage", {
         sender_id: decodedToken,
         reciverId: reciver_id,
         message: messageText,
       });
-  }
-};
+    }
+  };
 
 
   const openBoxforUser = () => {
     setOpenBox(!openBox);
   }
 
-
-  return (<MessagesView myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} getMesage={getMessage} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox}></MessagesView >)
+  const handleLogout = () => {
+    socket.emit("user-offline",decodedToken);
+    localStorage.removeItem("token");
+    toast("Logout succesfully");
+    navigate("/");
+  }
+  return (<MessagesView myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} getMesage={getMessage} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox} onlineUser={onlineUser} handleLogout={handleLogout}></MessagesView >)
 }

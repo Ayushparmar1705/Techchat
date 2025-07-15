@@ -6,7 +6,7 @@ import Openchattingboard from '../Openchattingboard/Openchattingboard';
 import { MessageCircle } from 'lucide-react';
 
 
-export default function MessagesView({ myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, handlesetName, profiledata , dbmessages}) {
+export default function MessagesView({ myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, handlesetName, profiledata , dbmessages , onlineUser , handleLogout}) {
     // this state used to when user start chatting all chatting data stored insode message and after storing the database
     const [message, setMessage] = useState("");
     // this state used to set the reciver id
@@ -81,7 +81,7 @@ export default function MessagesView({ myuser, loading, onclick, selectedUserNam
                     ) : (
                         <>
                             {/* Load the profile view model component where write code for the profile  */}
-                            <ProfileViewModel profiledata={profiledata}></ProfileViewModel>
+                            <ProfileViewModel profiledata={profiledata}  handleLogout={handleLogout}></ProfileViewModel>
                         </>
 
                     )}
@@ -90,7 +90,7 @@ export default function MessagesView({ myuser, loading, onclick, selectedUserNam
                 <div className='col-span-9 h-screen w-full flex flex-col bg-cover' >
                     {/* write code for the open chatting board when click on perticular user */}
                     {selectedUserName ? (
-                        <Openchattingboard selectedUserName={selectedUserName} setMessage={setMessage} handleSendMessage={handleSendMessage} reciverId={reciverId} message={message} getMesage={getMesage} dbmessages={dbmessages}></Openchattingboard>
+                        <Openchattingboard selectedUserName={selectedUserName} setMessage={setMessage} handleSendMessage={handleSendMessage} reciverId={reciverId} message={message} getMesage={getMesage} dbmessages={dbmessages} onlineUser={onlineUser}></Openchattingboard>
 
 
                     ) : (
