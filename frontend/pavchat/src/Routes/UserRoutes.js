@@ -13,7 +13,6 @@ export default function UserRoutes() {
         <Route path='/' element={<LoginViewModel></LoginViewModel>}></Route>
         <Route path='/auth/signup' element={<SignupViewModel></SignupViewModel>}></Route>
         <Route path='/dashboard' element={<MessagesViewModel></MessagesViewModel>}></Route>
-
       </Routes>
     </div>
   )

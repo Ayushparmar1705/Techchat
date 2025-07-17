@@ -1,11 +1,12 @@
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { messages } from './MessagesModel';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import MessagesView from "./MessagesView";
 import socket from "../../Socketconnection/SocketConnection";
 import { toast } from "react-toastify"
+
 export default function MessagesViewModel() {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -20,21 +21,33 @@ export default function MessagesViewModel() {
   const [openBox, setOpenBox] = useState(true);
   const [onlineUser, setOnlineUser] = useState([]);
 
+  const fetchMessage = async () => {
+    if (reciverId) {
+      const result = await messages.getMessage(decodedToken, reciverId);
+      setDbMessages(result.message)
+      console.log("database messages = ", result);
 
+    }
+
+  }
   useEffect(() => {
-    // if socket io don't connected connect it
     if (!socket.connected) {
       socket.connect();
     }
+    // if socket io don't connected connect it
+    socket.once("connect", () => {
+      console.log("socket is connected = ", socket.id);
+    })
+  }, []);
+  useEffect(() => {
+    // create the frontend socket io connection for the chatting
+
 
 
 
 
     //recive message from the server and set to state
-    socket.on("recivemessage", (data) => {
-
-      setGetMessage((prev) => [...prev, data])
-    })
+   
     //get the token from the localstorage
     const token = localStorage.getItem("token");
     // check the token is exists or not
@@ -45,7 +58,9 @@ export default function MessagesViewModel() {
 
       socket.emit("user_connected", decoded.id);
 
+
       socket.on("user_update_status", (data) => {
+        console.log(data);
         if (decoded) {
           console.log("user data status = ", data);
           setOnlineUser(data);
@@ -111,18 +126,10 @@ export default function MessagesViewModel() {
 
 
 
-  const fetchMessage = async () => {
-    if (reciverId) {
-      const result = await messages.getMessage(decodedToken, reciverId);
-
-      setDbMessages(result.message)
-    }
-
-  }
 
   useEffect(() => {
     fetchMessage();
-  });
+  }, [reciverId]);
   useEffect(() => {
     async function getProfile() {
 
@@ -146,6 +153,11 @@ export default function MessagesViewModel() {
   const openboard = async (fullname, id) => {
     setSelectedUserName(fullname);
     setReciverId(id);
+
+
+    if (!socket.connect) {
+      socket.connected();
+    }
 
 
 
@@ -179,17 +191,22 @@ export default function MessagesViewModel() {
   const handleSendMessage = async (e, reciver_id, messageText) => {
     if (e.key === "Enter" && messageText.trim() !== "") {
       // Save message to backend
-      const result = await messages.sendMessage(decodedToken, reciver_id, messageText);
-      console.log("updated = ", result);
+      // const result = await messages.sendMessage(decodedToken, reciver_id, messageText);
+      // console.log("updated = ", result);
 
 
-      // Emit to other clients
+    // Emit to other clients
       socket.emit("sendmessage", {
         sender_id: decodedToken,
-        reciverId: reciver_id,
+        reciver_id: reciver_id,
         message: messageText,
       });
     }
+     fetchMessage()
+    socket.on("recivemessage", (data) => {
+      console.log("Recive message from backend = ", data);
+      setGetMessage((prev) => [...prev, data])
+    })
   };
 
 
@@ -198,7 +215,7 @@ export default function MessagesViewModel() {
   }
 
   const handleLogout = () => {
-    socket.emit("user-offline",decodedToken);
+    socket.emit("user-offline", decodedToken);
     localStorage.removeItem("token");
     toast("Logout succesfully");
     navigate("/");

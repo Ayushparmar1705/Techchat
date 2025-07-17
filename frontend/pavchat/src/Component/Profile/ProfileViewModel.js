@@ -1,39 +1,13 @@
 import { Camera, User } from "lucide-react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-export default function ProfileViewModel({ profiledata , handleLogout }) {
-    const fileInputRef = useRef(null);
-    const [ProfileImage, setProfileImage] = useState(null);
+export default function ProfileViewModel({ProfileImage , fileInputRef , profiledata , handleLogout , handleUpdateProfile, handleProfilechange, handleCameraClick, handleFileOnChange , Profiledata}) {
 
-    const [Profiledata, setProfiledata] = useState({
-        fullname: profiledata.message[0].fullname,
-        email: profiledata.message[0].email,
-        image: "",
-    });
 
-    const handleUpdateProfile = () => {
-        console.log(Profiledata, ProfileImage);
-    };
+    useEffect(()=>{
+        console.log(Profiledata);
+    },[Profiledata])
 
-    const handleProfilechange = (e) => {
-        const { name, value } = e.target;
-        setProfiledata((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleCameraClick = () => {
-        fileInputRef.current.click();
-    };
-
-    const handleFileOnChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const render = new FileReader();
-            render.onloadend = () => {
-                setProfileImage(render.result);
-            };
-            render.readAsDataURL(file);
-        }
-    };
 
     return (
         <div className="h-full w-full  flex-col">

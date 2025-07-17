@@ -28,6 +28,7 @@ export default function Sidebaruser({ myuser, setUserHover, userHover, setRecive
                                 <div 
                                  key={index} onClick={() => {
                                     onclick(data.fullname, data.id);
+                                    
                                     setReciverId(data.id);
 
                                 }}
@@ -42,6 +43,7 @@ export default function Sidebaruser({ myuser, setUserHover, userHover, setRecive
 
                                         <i className="relative left-[5px] fa-solid fa-star text-yellow-400 " onClick={(e) => {
                                             e.stopPropagation();
+                                            console.log(e);
 
                                         }}></i>
                                     )}

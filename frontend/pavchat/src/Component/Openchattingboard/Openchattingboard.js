@@ -11,12 +11,8 @@ export default function Openchattingboard({ selectedUserName, setMessage, handle
         const decode = jwtDecode(token);
         setdecodedToken(decode.id);
     }
-   },[decodedToken]);
-   useEffect(()=>{
-    if(decodedToken){
-        console.log("decoded token = ",decodedToken);
-    }
-   },[decodedToken])
+   },[]);
+
   
     return (
 
@@ -46,12 +42,12 @@ export default function Openchattingboard({ selectedUserName, setMessage, handle
                     {dbmessages.length > 0 && (
                         dbmessages.map((data, index) => (
 
-                            <div key={index} className='w-[100%] flex flex-col items-end'>
+                            <div key={index} className='flex flex-col items-end'>
                             
                                 <div
 
-                                    className='rounded  w-fit mt-[5px]'>
-                                    <p className={`${data.created_by === decodedToken?'bg-blue-200':'bg-gray-300'} rounded-[10px] p-[10px]`}>{data.message}</p>
+                                    className='rounded  flex  w-[100%] mt-[5px]'>
+                                    <p className={`${data.created_by === decodedToken?'flex-end bg-blue-200':'flex-start ml-[90%] bg-gray-300'} rounded-[10px] p-[10px]`}>{data.message}</p>
 
 
                                 </div>

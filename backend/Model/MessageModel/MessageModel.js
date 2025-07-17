@@ -7,8 +7,9 @@ const sendMessage = (messageData, callback) => {
 
 
 const getMessage = (data , callback)=>{
-    const sql = "SELECT * FROM messages WHERE (created_by = ? AND reciver_by = ?) OR (reciver_by = ? AND created_by = ?)"
+    const sql = "SELECT * FROM messages WHERE (created_by = ? AND reciver_by = ?) OR (created_by = ? AND reciver_by = ?)"
     db.query(sql , [data.created_by , data.reciver_by , data.reciver_by , data.created_by],callback);
+//
 }
 
 

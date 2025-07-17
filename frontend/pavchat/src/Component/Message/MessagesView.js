@@ -4,6 +4,7 @@ import Sidebaruser from '../Usersidebar/Sidebaruser';
 import { User } from "lucide-react"
 import Openchattingboard from '../Openchattingboard/Openchattingboard';
 import { MessageCircle } from 'lucide-react';
+import ProfileView from '../Profile/ProfileView';
 
 
 export default function MessagesView({ myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, handlesetName, profiledata , dbmessages , onlineUser , handleLogout}) {
@@ -22,13 +23,13 @@ export default function MessagesView({ myuser, loading, onclick, selectedUserNam
 
 
     function MovetochattoProfile() {
-        setmoveToProfileAndMoveToChat(true);
+        setmoveToProfileAndMoveToChat(false);
 
         let scroll = document.querySelector(".sidebar-scroll");
         scroll.scrollTop = 0;
     }
     function MovetoProfiletoChat() {
-        setmoveToProfileAndMoveToChat(false);
+        setmoveToProfileAndMoveToChat(true);
     }
 
     return (
@@ -81,7 +82,7 @@ export default function MessagesView({ myuser, loading, onclick, selectedUserNam
                     ) : (
                         <>
                             {/* Load the profile view model component where write code for the profile  */}
-                            <ProfileViewModel profiledata={profiledata}  handleLogout={handleLogout}></ProfileViewModel>
+                            <ProfileView profiledata={profiledata}  handleLogout={handleLogout}></ProfileView>
                         </>
 
                     )}
