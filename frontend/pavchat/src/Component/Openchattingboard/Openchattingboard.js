@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 export default function Openchattingboard({ selectedUserName, setMessage, handleSendMessage, reciverId, message, getMesage , dbmessages , onlineUser}) {
     const [decodedToken , setdecodedToken] = useState("");
+    console.log("Offline and Online users = ",onlineUser);
    useEffect(()=>{
      const token = localStorage.getItem("token");
 
@@ -26,7 +27,7 @@ export default function Openchattingboard({ selectedUserName, setMessage, handle
                <div className='bg-gray-50 h-[60px]'>
                  <p className='p-[2px] text-[20px]' style={{ fontFamily: "Be Vietnam Pro" }}>{selectedUserName}</p>
                  <p className='p-[2px] font-bold text-[10px]'>
-                    {onlineUser.includes(reciverId)? (
+                    {onlineUser.includes(Number(reciverId))? (
                         <p className='text-green-500'>🟢 Online</p>
                     ):
                     <p className='text-gray-500'>⚪️ Offline</p>}
@@ -42,12 +43,15 @@ export default function Openchattingboard({ selectedUserName, setMessage, handle
                     {dbmessages.length > 0 && (
                         dbmessages.map((data, index) => (
 
-                            <div key={index} className='flex flex-col items-end'>
+                            <div key={index} className={`flex ${data.created_by === decodedToken?'justify-end':'justify-start'}`}>
                             
-                                <div
-
-                                    className='rounded  flex  w-[100%] mt-[5px]'>
-                                    <p className={`${data.created_by === decodedToken?'flex-end bg-blue-200':'flex-start ml-[90%] bg-gray-300'} rounded-[10px] p-[10px]`}>{data.message}</p>
+                                <div >
+                                    <div className={`rounded-[10px] mt-[5px]  ${data.created_by === decodedToken?'bg-pink-500 text-white':'bg-blue-500 text-white'}`}>
+                                        <div className={`shadow-2xl   ${data.created_by === decodedToken?'w-fit text-right':'w-fit  text-left'} rounded-[10px] p-[10px]`}>
+                                           {data.message}
+                                        </div>
+                                    </div>
+                                   
 
 
                                 </div>

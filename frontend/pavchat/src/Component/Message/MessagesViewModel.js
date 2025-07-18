@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { messages } from './MessagesModel';
 import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
@@ -21,15 +21,7 @@ export default function MessagesViewModel() {
   const [openBox, setOpenBox] = useState(true);
   const [onlineUser, setOnlineUser] = useState([]);
 
-  const fetchMessage = async () => {
-    if (reciverId) {
-      const result = await messages.getMessage(decodedToken, reciverId);
-      setDbMessages(result.message)
-      console.log("database messages = ", result);
 
-    }
-
-  }
   useEffect(() => {
     if (!socket.connected) {
       socket.connect();
@@ -47,7 +39,7 @@ export default function MessagesViewModel() {
 
 
     //recive message from the server and set to state
-   
+
     //get the token from the localstorage
     const token = localStorage.getItem("token");
     // check the token is exists or not
@@ -128,9 +120,26 @@ export default function MessagesViewModel() {
 
 
   useEffect(() => {
-    fetchMessage();
-  }, [reciverId]);
+    socket.on("recivemessage", (data) => {
+
+      setDbMessages((prev) => [...prev, data])
+     
+    })
+
+  }, []);
+const fetchMessage = useCallback(async () => {
+  if (reciverId) {
+    const result = await messages.getMessage(decodedToken, reciverId);
+    setDbMessages(result.message);
+  }
+}, [reciverId, decodedToken]);
+
+useEffect(() => {
+  fetchMessage();
+}, [fetchMessage]);
+
   useEffect(() => {
+
     async function getProfile() {
 
 
@@ -155,8 +164,9 @@ export default function MessagesViewModel() {
     setReciverId(id);
 
 
-    if (!socket.connect) {
-      socket.connected();
+    if (!socket.connected) {
+      socket.connect();
+      console.log("socket is connected on user click = ", socket.id);
     }
 
 
@@ -195,18 +205,18 @@ export default function MessagesViewModel() {
       // console.log("updated = ", result);
 
 
-    // Emit to other clients
+      // Emit to other clients
       socket.emit("sendmessage", {
         sender_id: decodedToken,
         reciver_id: reciver_id,
         message: messageText,
       });
+
+
+        fetchMessage()
     }
-     fetchMessage()
-    socket.on("recivemessage", (data) => {
-      console.log("Recive message from backend = ", data);
-      setGetMessage((prev) => [...prev, data])
-    })
+
+
   };
 
 

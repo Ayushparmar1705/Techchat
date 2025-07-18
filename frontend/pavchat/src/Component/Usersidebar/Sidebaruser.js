@@ -1,5 +1,6 @@
 import React from 'react'
 import {motion} from "framer-motion"
+import { User } from 'lucide-react';
 export default function Sidebaruser({ myuser, setUserHover, userHover, setReciverId, handlesetName, onclick, loading }) {
 
     return (
@@ -33,8 +34,12 @@ export default function Sidebaruser({ myuser, setUserHover, userHover, setRecive
 
                                 }}
                                     onMouseEnter={() => { setUserHover(data.id) }} onMouseLeave={() => { setUserHover(null) }}
-                                    className='p-[10px] hover:bg-gray-100 transition-all duration-300 ease-in-out rounded-[10px] flex items-center cursor-pointer'>
-                                    <img className='h-[30px] w-[30px]' src='../images/user.png' alt='Nofound'></img>
+                                    className='p-[10px] hover:bg-gray-100 transition-all duration-300 ease-in-out rounded-[10px] flex items-center cursor-pointer '>
+                                    <User
+                       
+                        className="block cursor-pointer hover:bg-gray-100 transition duration-200 h-[40px] w-[40px] border-2 border-gray-50 rounded-full"
+                        size={50}
+                    />
                                     <p
                                     
                                      className='p-[10px] w-[300px]' style={{ fontFamily: "Be Vietnam Pro" }}>{data.fullname}</p>

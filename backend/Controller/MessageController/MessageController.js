@@ -15,7 +15,6 @@ const sendmessage = (data) => {
 
 const getMsg = (req, res) => {
     const data = req.params;
-    console.log("Get messages id = ",data);
     messages.getMessage(data, (err, result) => {
         if (err) {
             return res.status(402).send({ message: err });
@@ -27,3 +26,5 @@ const getMsg = (req, res) => {
 
 }
 module.exports = { sendmessage, getMsg };
+
+
