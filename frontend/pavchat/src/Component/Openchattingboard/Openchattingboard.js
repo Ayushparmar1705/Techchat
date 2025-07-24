@@ -2,7 +2,7 @@
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState } from 'react'
 
-export default function Openchattingboard({ selectedUserName, setMessage, handleSendMessage, reciverId, message, getMesage , dbmessages , onlineUser}) {
+export default function Openchattingboard({ selectedUserName, setMessage, handleSendMessage, reciverId, message , dbmessages , onlineUser}) {
     const [decodedToken , setdecodedToken] = useState("");
     console.log("Offline and Online users = ",onlineUser);
    useEffect(()=>{

@@ -40,7 +40,7 @@ export default function LoginView({ form, loading, handleOnchange, handleLogin }
 
                 </div>
                 <div className=''>
-                    <button onClick={handleLogin} className='p-[10px] w-[200px] bg-pink-400 rounded-[5px] hover:bg-pink-300 max-[900px]:w-[100%]'>Login</button>
+                    <button onClick={handleLogin} className='p-[10px] w-[200px] bg-blue-200 rounded-[5px] hover:bg-blue-400 max-[900px]:w-[100%]'>Login</button>
                 </div>
                 <div className='relative top-4'>
                     <p>Not member ? <Link to="/auth/signup" className='border-b-[2px]'>Sign up</Link></p>

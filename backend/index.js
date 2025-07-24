@@ -7,6 +7,7 @@ const Profileroutes = require("./Routes/ProfileRoutes/ProfileRoutes");
 const socketio = require("socket.io");
 const http = require("http");
 const messages = require("./Controller/MessageController/MessageController");
+const AddFavouriteRoutes = require("./Routes/AddFavouriteRoutes/AddFavouriteRoutes");
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -25,26 +26,26 @@ const onlineUser = new Map();
 io.on("connection", (socket) => {
 
     // check the user is the online
-    socket.on("user_connected",(userId)=>{
-        onlineUser.set(userId , socket.id);
-        io.emit("user_update_status",Array.from(onlineUser.keys()));
+    socket.on("user_connected", (userId) => {
+        onlineUser.set(userId, socket.id);
+        io.emit("user_update_status", Array.from(onlineUser.keys()));
     })
 
 
 
     // check the user is the offline
-    socket.on("user-offline",(userId)=>{
+    socket.on("user-offline", (userId) => {
         onlineUser.delete(userId);
-        io.emit("user_update_status",Array.from(onlineUser.keys()));
+        io.emit("user_update_status", Array.from(onlineUser.keys()));
     })
-    socket.on("disconnected",()=>{
-        console.log("disconnected",socket.id);
+    socket.on("disconnected", () => {
+        console.log("disconnected", socket.id);
     })
     // console.log("client connected",socket.id);
     // get the message for the client
     // When client send the message to the server below callback execute
     socket.on("sendmessage", (data) => {
-       
+        // console.log("send data = ",data);
         messages.sendmessage(data);
         //send the message to all the connected clients including the sender
         io.emit("recivemessage", {
@@ -65,6 +66,7 @@ app.use("/auth", Authroutes);
 app.use("/get/", Getuserroutes);
 app.use("/messages/", Messageroutes);
 app.use("/user-profile", Profileroutes);
+app.use("/add", AddFavouriteRoutes);
 server.listen(8080, '0.0.0.0', () => {
     console.log("server is running")
 });

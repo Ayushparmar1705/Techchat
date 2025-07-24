@@ -13,27 +13,26 @@ export default function MessagesViewModel() {
   const [loading, setLoading] = useState(true);
   const [selectedUserName, setSelectedUserName] = useState("");
   const [decodedToken, setdecodedToken] = useState(null);
-  const [getMessage, setGetMessage] = useState([]);
+
   const [dbmessages, setDbMessages] = useState([]);
   const [reciverId, setReciverId] = useState('');
   const [allUsers, setAllusers] = useState([]);
   const [profiledata, setProfiledata] = useState([]);
   const [openBox, setOpenBox] = useState(true);
   const [onlineUser, setOnlineUser] = useState([]);
-
+  const [messageLoading, setMessageLoading] = useState(false);
 
   useEffect(() => {
+    // if socket io don't connected connect it
     if (!socket.connected) {
       socket.connect();
     }
-    // if socket io don't connected connect it
     socket.once("connect", () => {
       console.log("socket is connected = ", socket.id);
     })
   }, []);
   useEffect(() => {
-    // create the frontend socket io connection for the chatting
-
+   
 
 
 
@@ -123,20 +122,28 @@ export default function MessagesViewModel() {
     socket.on("recivemessage", (data) => {
 
       setDbMessages((prev) => [...prev, data])
-     
+
     })
 
   }, []);
-const fetchMessage = useCallback(async () => {
-  if (reciverId) {
-    const result = await messages.getMessage(decodedToken, reciverId);
-    setDbMessages(result.message);
-  }
-}, [reciverId, decodedToken]);
+  const fetchMessage = useCallback(async () => {
+    setMessageLoading(true);
+    try {
+      if (reciverId) {
+        const result = await messages.getMessage(decodedToken, reciverId);
+        setDbMessages(result.message);
+      }
+    }
+    catch (err) {
+      console.log(err)
+    } finally {
+      setMessageLoading(false)
+    }
+  }, [reciverId, decodedToken]);
 
-useEffect(() => {
-  fetchMessage();
-}, [fetchMessage]);
+  useEffect(() => {
+    fetchMessage();
+  }, [fetchMessage]);
 
   useEffect(() => {
 
@@ -201,11 +208,11 @@ useEffect(() => {
   const handleSendMessage = async (e, reciver_id, messageText) => {
     if (e.key === "Enter" && messageText.trim() !== "") {
       // Save message to backend
-      // const result = await messages.sendMessage(decodedToken, reciver_id, messageText);
-      // console.log("updated = ", result);
+    
 
 
       // Emit to other clients
+    
       socket.emit("sendmessage", {
         sender_id: decodedToken,
         reciver_id: reciver_id,
@@ -213,9 +220,9 @@ useEffect(() => {
       });
 
 
-        fetchMessage()
-    }
 
+      fetchMessage()
+    }
 
   };
 
@@ -230,5 +237,5 @@ useEffect(() => {
     toast("Logout succesfully");
     navigate("/");
   }
-  return (<MessagesView myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} getMesage={getMessage} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox} onlineUser={onlineUser} handleLogout={handleLogout}></MessagesView >)
+  return (<MessagesView senderId = {decodedToken} myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} messageLoading={messageLoading} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox} onlineUser={onlineUser} handleLogout={handleLogout}></MessagesView >)
 }

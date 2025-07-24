@@ -1,4 +1,4 @@
-export const messages = {
+export  const messages = {
     getUsers: async (token) => {
 
         const URL = `http://localhost:8080/get/user/${token}`;
@@ -35,5 +35,8 @@ export const messages = {
         const result = await data.json();
         return result;
     }
+
+
+    
 
 }

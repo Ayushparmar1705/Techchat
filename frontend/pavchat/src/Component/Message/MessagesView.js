@@ -7,7 +7,7 @@ import { MessageCircle } from 'lucide-react';
 import ProfileView from '../Profile/ProfileView';
 
 
-export default function MessagesView({ myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, handlesetName, profiledata , dbmessages , onlineUser , handleLogout}) {
+export default function MessagesView({ senderId , myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, handlesetName, profiledata , dbmessages , onlineUser , handleLogout , messageLoading}) {
     // this state used to when user start chatting all chatting data stored insode message and after storing the database
     const [message, setMessage] = useState("");
     // this state used to set the reciver id
@@ -65,17 +65,8 @@ export default function MessagesView({ myuser, loading, onclick, selectedUserNam
 
                             <>
                                 {/* Show the side bar all the user */}
-                                <Sidebaruser myuser={myuser} setUserHover={setUserHover} userHover={userHover} setReciverId={setReciverId} handlesetName={handlesetName} onclick={onclick} loading={loading} />
-                                {/* create the code for the open profile page */}
-                                {/* <div className='sticky bottom-0 bg-gray-200 '>
-
-                                        <div className=' group rounded-full h-[60px] w-[60px] flex justify-center items-center' onClick={dropdown}>
-                                            <img className='cursor-pointer rounded-full h-[40px] w-[45px]' src='../images/profile.jpg' alt='Nofound' ></img>
-                                            <p className='hidden absolute left-[60px] bg-gray-100 shadow rounded p-[2px] group-hover:block font-bold'>Your Profile</p>
-
-                                        </div>
-
-                                    </div> */}
+                                <Sidebaruser reciverId={reciverId} senderId={senderId} myuser={myuser} setUserHover={setUserHover} userHover={userHover} setReciverId={setReciverId} handlesetName={handlesetName} onclick={onclick} loading={loading} />
+                              
                             </>
 
                         </div>
@@ -91,7 +82,7 @@ export default function MessagesView({ myuser, loading, onclick, selectedUserNam
                 <div className='col-span-9 h-screen w-full flex flex-col bg-cover' >
                     {/* write code for the open chatting board when click on perticular user */}
                     {selectedUserName ? (
-                        <Openchattingboard selectedUserName={selectedUserName} setMessage={setMessage} handleSendMessage={handleSendMessage} reciverId={reciverId} message={message} getMesage={getMesage} dbmessages={dbmessages} onlineUser={onlineUser}></Openchattingboard>
+                        <Openchattingboard selectedUserName={selectedUserName} setMessage={setMessage} handleSendMessage={handleSendMessage} reciverId={reciverId} message={message} getMesage={getMesage} dbmessages={dbmessages} onlineUser={onlineUser} messageLoading = {messageLoading}></Openchattingboard>
 
 
                     ) : (

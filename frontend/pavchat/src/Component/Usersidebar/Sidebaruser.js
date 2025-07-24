@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {motion} from "framer-motion"
-import { User } from 'lucide-react';
-export default function Sidebaruser({ myuser, setUserHover, userHover, setReciverId, handlesetName, onclick, loading }) {
-
+import { CloudCog, User } from 'lucide-react';
+import { AddFavourite } from '../Favourite_person/FavouritePersonModel';
+import { toast } from 'react-toastify';
+export default function Sidebaruser({ senderId , myuser, setUserHover, userHover, setReciverId, handlesetName, onclick, loading }) {
+    const [isFavourite , setIsFavourite] = useState(false);
+    console.log(isFavourite);
+    
     return (
         <div>
             <div className='p-[10px]'>
@@ -43,15 +47,30 @@ export default function Sidebaruser({ myuser, setUserHover, userHover, setRecive
                                     <p
                                     
                                      className='p-[10px] w-[300px]' style={{ fontFamily: "Be Vietnam Pro" }}>{data.fullname}</p>
-
+                                        {/* When user is hover then check the matched id for the perticular user and after show the favourite image to add the favourite person and check the id means the id is matched with the perticular user that's why write the userHover === data.id*/}
                                     {userHover === data.id && (
 
-                                        <i className="relative left-[5px] fa-solid fa-star text-yellow-400 " onClick={(e) => {
+                                        isFavourite ? (
+                                            <img src='./images/heart.png' alt='Not found' className={'h-[20px] w-[20px]'} onClick={(e) => {
                                             e.stopPropagation();
-                                            console.log(e);
-
-                                        }}></i>
+                                      
+                                            AddFavourite(senderId , data.id);
+                                            toast("Person Added to favourite");
+                                            setIsFavourite(true);
+                                            
+                                        }}></img>
+                                        ):(
+                                             <img src='./images/heart.png' alt='Not found' className={'h-[20px] w-[20px]'} onClick={(e) => {
+                                            e.stopPropagation();
+                                      
+                                            AddFavourite(senderId , data.id);
+                                            toast("Person Added to favourite");
+                                            setIsFavourite(true);
+                                            
+                                        }}></img>
+                                        )
                                     )}
+                                   
                                 </div>
 
 

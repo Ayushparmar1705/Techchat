@@ -47,7 +47,7 @@ export default function SignupView({ handleOnchange, signupUser}) {
 
                 </div>
                 <div className=''>
-                    <button onClick={signupUser} className='p-[10px] w-[200px] bg-pink-400 rounded-[5px] hover:bg-pink-300'>Sign Up</button>
+                    <button onClick={signupUser} className='p-[10px] w-[200px] bg-blue-200 rounded-[5px] hover:bg-blue-400'>Sign Up</button>
                 </div>
                 <div className='relative top-4'>
                     <p>Alredy have an account ? <Link to="/" className='border-b-[2px]'>Login</Link></p>
