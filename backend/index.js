@@ -8,6 +8,7 @@ const socketio = require("socket.io");
 const http = require("http");
 const messages = require("./Controller/MessageController/MessageController");
 const AddFavouriteRoutes = require("./Routes/AddFavouriteRoutes/AddFavouriteRoutes");
+const ShowFavourites = require("./Routes/ShowFavourite/ShowFavouriteRoutes");
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -67,6 +68,7 @@ app.use("/get/", Getuserroutes);
 app.use("/messages/", Messageroutes);
 app.use("/user-profile", Profileroutes);
 app.use("/add", AddFavouriteRoutes);
+app.use("/get/",ShowFavourites)
 server.listen(8080, '0.0.0.0', () => {
     console.log("server is running")
 });

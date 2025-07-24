@@ -1,6 +1,10 @@
-export  const messages = {
+import { useState } from "react";
+
+export const messages = {
+
     getUsers: async (token) => {
 
+    
         const URL = `http://localhost:8080/get/user/${token}`;
         const data = await fetch(URL);
         const result = await data.json();
@@ -34,9 +38,15 @@ export  const messages = {
         const data = await fetch(URL);
         const result = await data.json();
         return result;
+    },
+
+    showFavouriteList : async (decodedToken) => {
+        console.log("fsv 2 decoded  =", decodedToken);
+        const URL = `http://localhost:8080/get/favourites/${decodedToken}`;
+        const data = await fetch(URL);
+        const result = await data.json();
+        return result;
     }
 
-
-    
 
 }

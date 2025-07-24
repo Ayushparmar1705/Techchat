@@ -21,6 +21,8 @@ export default function MessagesViewModel() {
   const [openBox, setOpenBox] = useState(true);
   const [onlineUser, setOnlineUser] = useState([]);
   const [messageLoading, setMessageLoading] = useState(false);
+  const [openFavourite , setopenFavourites] = useState(false);
+  const [fav , setFav] = useState([]);
 
   useEffect(() => {
     // if socket io don't connected connect it
@@ -84,6 +86,7 @@ export default function MessagesViewModel() {
 
   useEffect(() => {
     //get user from the database
+    setLoading(true);
     const getUser = async () => {
       try {
         //check token is exists or not if not exists return
@@ -237,5 +240,14 @@ export default function MessagesViewModel() {
     toast("Logout succesfully");
     navigate("/");
   }
-  return (<MessagesView senderId = {decodedToken} myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} messageLoading={messageLoading} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox} onlineUser={onlineUser} handleLogout={handleLogout}></MessagesView >)
+
+
+  async function showFavList(){
+    const list = await messages.showFavouriteList(decodedToken);
+    setFav(list);
+  }
+  useEffect(()=>{
+    showFavList();
+  },[decodedToken]);
+  return (<MessagesView senderId = {decodedToken} myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} messageLoading={messageLoading} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox} onlineUser={onlineUser} handleLogout={handleLogout}openFavourite = {openFavourite} setopenFavourites = {setopenFavourites} fav = {fav}></MessagesView >)
 }
