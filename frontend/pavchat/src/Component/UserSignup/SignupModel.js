@@ -1,6 +1,6 @@
 export const Signupmodel = async (userdata) => {
     try {
-        const URL = "http://localhost:8080/auth/signup";
+        const URL = "https://techchat-hctq.onrender.com/auth/signup";
         console.log("user data object = ",userdata);
         const data = await fetch(URL, {
             method: "POST",
