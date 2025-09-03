@@ -3,7 +3,7 @@ const messages = require("../../Model/MessageModel/MessageModel.js");
 const sendmessage = (data) => {
     // const messageData = req.body;
     const messageData = data;
-    console.log(messageData);
+    
     messages.sendMessage(messageData, (err, result) => {
         if (err) {
             return err;

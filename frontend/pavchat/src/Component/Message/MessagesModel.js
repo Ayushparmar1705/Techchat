@@ -1,4 +1,3 @@
-import { useState } from "react";
 
 export const messages = {
 
@@ -41,7 +40,6 @@ export const messages = {
     },
 
     showFavouriteList : async (decodedToken) => {
-        console.log("fsv 2 decoded  =", decodedToken);
         const URL = `http://localhost:8080/get/favourites/${decodedToken}`;
         const data = await fetch(URL);
         const result = await data.json();

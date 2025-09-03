@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react'
 
 export default function Openchattingboard({ selectedUserName, setMessage, handleSendMessage, reciverId, message , dbmessages , onlineUser}) {
     const [decodedToken , setdecodedToken] = useState("");
-    console.log("Offline and Online users = ",onlineUser);
+    const [isShow , setisShow] = useState("");
+    const [message_id , setMessageId] = useState("");
    useEffect(()=>{
      const token = localStorage.getItem("token");
 
@@ -43,14 +44,25 @@ export default function Openchattingboard({ selectedUserName, setMessage, handle
                     {dbmessages.length > 0 && (
                         dbmessages.map((data, index) => (
 
-                            <div key={index} className={`flex ${data.created_by === decodedToken?'justify-end':'justify-start'}`}>
+                            <div  key={index} className={`flex ${data.created_by === decodedToken?'justify-end':'justify-start'}`}>
                             
-                                <div >
-                                    <div className={`rounded-[10px] mt-[5px]  ${data.created_by === decodedToken?'bg-pink-500 text-white':'bg-blue-500 text-white'}`}>
-                                        <div className={`shadow-2xl   ${data.created_by === decodedToken?'w-fit text-right':'w-fit  text-left'} rounded-[10px] p-[10px]`}>
-                                           {data.message}
+                                <div  onMouseEnter={()=>{
+                                        setisShow(data.created_by);
+                                        setMessageId(data.message_id);
+                                    }} onMouseLeave={()=>{
+                                          setisShow("")
+                                    }}  className='h-[70px] flex items-center'>
+                                    <div  className={`rounded-[10px] mt-[5px]  ${data.created_by === decodedToken?'bg-pink-500 text-white':'bg-blue-500 text-white'}`}>
+                                        <div className={`shadow-2xl   ${data.created_by === decodedToken?'w-fit text-right':'w-fit  text-left'} rounded-[10px] h-[60px]  p-[10px]`}>
+                                           <p>{data.message}</p>
+                                          
+                                         {isShow === data.created_by && data.message_id === message_id && (
+                                         <p className='text-gray-100'>{data.created_on}</p>
+                                       )}
+                                    
                                         </div>
                                     </div>
+                                      
                                    
 
 

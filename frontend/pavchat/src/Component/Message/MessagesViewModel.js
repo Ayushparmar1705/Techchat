@@ -68,7 +68,7 @@ export default function MessagesViewModel() {
 
 
     else {
-      navigate("/auth/login")
+      navigate("/")
     }
 
     //off the recive message and send messag
@@ -242,12 +242,13 @@ export default function MessagesViewModel() {
   }
 
 
+  useEffect(()=>{
+    
   async function showFavList(){
     const list = await messages.showFavouriteList(decodedToken);
     setFav(list);
   }
-  useEffect(()=>{
     showFavList();
-  },[decodedToken]);
+  },[decodedToken ]);
   return (<MessagesView senderId = {decodedToken} myuser={users} loading={loading} onclick={openboard} setSelectedUserName={setSelectedUserName} selectedUserName={selectedUserName} handleSendMessage={handleSendMessage} messageLoading={messageLoading} dbmessages={dbmessages} handlesetName={handlesetName} profiledata={profiledata} openBoxforUser={openBoxforUser} openBox={openBox} onlineUser={onlineUser} handleLogout={handleLogout}openFavourite = {openFavourite} setopenFavourites = {setopenFavourites} fav = {fav}></MessagesView >)
 }

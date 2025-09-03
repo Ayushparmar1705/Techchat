@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import Sidebaruser from '../Usersidebar/Sidebaruser';
-import {  Heart, User } from "lucide-react"
+import { Heart, User } from "lucide-react"
 import Openchattingboard from '../Openchattingboard/Openchattingboard';
 import { MessageCircle } from 'lucide-react';
 import ProfileView from '../Profile/ProfileView';
 import OpenFavourite from '../OpenFavourite/OpenFavouriteView';
-import {AnimatePresence, motion} from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 
-export default function MessagesView({ senderId, myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, handlesetName, profiledata, dbmessages, onlineUser, handleLogout, messageLoading , openFavourite , setopenFavourites , fav}) {
+export default function MessagesView({ senderId, myuser, loading, onclick, selectedUserName, handleSendMessage, getMesage, handlesetName, profiledata, dbmessages, onlineUser, handleLogout, messageLoading, openFavourite, setopenFavourites, fav }) {
     // this state used to when user start chatting all chatting data stored insode message and after storing the database
     const [message, setMessage] = useState("");
     // this state used to set the reciver id
@@ -33,11 +33,11 @@ export default function MessagesView({ senderId, myuser, loading, onclick, selec
         setmoveToProfileAndMoveToChat(true);
         setopenFavourites(false);
     }
-    function openFav(){
-      
+    function openFav() {
+
         setmoveToProfileAndMoveToChat(undefined);
         setopenFavourites(true);
-        
+
     }
     return (
 
@@ -59,61 +59,61 @@ export default function MessagesView({ senderId, myuser, loading, onclick, selec
             <div className='grid grid-cols-12 flex-1 '>
                 {/* pending to understand why it's used */}
 
-                <div className='col-span-3  border-[2px] border-gray-50 shadow overflow-y-scroll  sidebar-scroll '>
+                <div className='col-span-3  border-[2px] border-gray-50 shadow  sidebar-scroll '>
                     <div className='flex justify-center items-center'>
                         <img src='https://cdn-icons-png.flaticon.com/512/4712/4712027.png' alt='Nofound' className='h-[20px] w-[20px] '></img>
                         <p className='text-black ml-2' style={{ fontFamily: "Be Vietnam Pro" }} >Techchat</p>
-                      
+
 
 
                     </div>
-                    
+
                     {/* write code for toggle between profile page and chat page */}
-         
-
-                   <div className='relative h-full w-full overflow-hidden'>
-                    <AnimatePresence mode="wait">
-                        {moveToProfileAndMoveToChat === true && (
-                            <motion.div key='chat'
-                            initial={{opacity:1,y:-20}}
-                            animate={{opacity:1,y:0}}
-                            exit={{opacity:0,y:50}}
-                            transition={{duration : 0.3 , ease : "easeInOut"}}
-                            className='absolute inset-0'>
-                                 <Sidebaruser reciverId={reciverId} senderId={senderId} myuser={myuser} setUserHover={setUserHover} userHover={userHover} setReciverId={setReciverId} handlesetName={handlesetName} onclick={onclick} loading={loading} />
-
-                            </motion.div>
-                        )}
 
 
+                    <div className='relative h-full w-full overflow-y-scroll'>
+                        <AnimatePresence mode="wait">
+                            {moveToProfileAndMoveToChat === true && (
+                                <motion.div key='chat'
+                                    initial={{ opacity: 1, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 50 }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    className='absolute inset-0'>
+                                    <Sidebaruser reciverId={reciverId} senderId={senderId} myuser={myuser} setUserHover={setUserHover} userHover={userHover} setReciverId={setReciverId} handlesetName={handlesetName} onclick={onclick} loading={loading} />
 
-                        {moveToProfileAndMoveToChat === false && (
-                            <motion.div key='profile'
-                            initial={{opacity:1,y:-20}}
-                            animate={{opacity:1,y:0}}
-                            exit={{opacity:0,y:50}}
-                           transition={{duration : 0.3 , ease : "easeInOut"}}
-                            className='absolute inset-0'>
-                                   <ProfileView profiledata={profiledata} handleLogout={handleLogout}></ProfileView>
-
-                            </motion.div>
-                        )}
+                                </motion.div>
+                            )}
 
 
-                        {openFavourite === true && (
-                            <motion.div key='favourite'
-                            initial={{opacity:0,x:0}}
-                            animate={{opacity:1,x:10}}
-                            exit={{opacity:0,x:10}}
-                            transition={{duration : 0.3 , ease : "easeInOut"}}
-                            
-                            className='absolute inset-0'>
-                                     <OpenFavourite fav = {fav}></OpenFavourite>
 
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                   </div>
+                            {moveToProfileAndMoveToChat === false && (
+                                <motion.div key='profile'
+                                    initial={{ opacity: 1, y: -20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: 50 }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    className='absolute inset-0'>
+                                    <ProfileView profiledata={profiledata} handleLogout={handleLogout}></ProfileView>
+
+                                </motion.div>
+                            )}
+
+
+                            {openFavourite === true && (
+                                <motion.div key='favourite'
+                                    initial={{ opacity: 0, x: 0 }}
+                                    animate={{ opacity: 1, x: 10 }}
+                                    exit={{ opacity: 0, x: 10 }}
+                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+
+                                    className='absolute inset-0'>
+                                    <OpenFavourite fav={fav}></OpenFavourite>
+
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
 
                 </div>
                 <div className='col-span-9 h-screen w-full flex flex-col bg-cover' >
@@ -131,7 +131,7 @@ export default function MessagesView({ senderId, myuser, loading, onclick, selec
                             </div>
                         </>
                     )}
-                    
+
                 </div>
 
             </div>
